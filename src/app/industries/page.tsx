@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { industries } from '@/data/industries'
 import ScrollReveal from '@/components/ScrollReveal'
+import Icon from '@/components/Icon'
 
 export default function IndustriesPage() {
   const [search, setSearch] = useState('')
@@ -14,32 +15,30 @@ export default function IndustriesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="hero" style={{ minHeight: '50vh', paddingTop: '10rem', paddingBottom: '4rem' }}>
+      <section className="hero" style={{ minHeight: '56vh' }}>
         <div className="orb orb1" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '720px', margin: '0 auto' }}>
-          <span className="slbl" style={{ display: 'block', marginBottom: '.9rem' }}>Industries We Serve</span>
-          <h1 style={{ fontSize: 'clamp(2rem,5vw,3.8rem)', fontWeight: 900, lineHeight: 1.08, letterSpacing: '-.03em', marginBottom: '1rem' }}>
-            Your Industry. <span className="gt2">Our Expertise.</span>
-          </h1>
+          <span className="slbl">Industries</span>
+          <h1>Your industry. <span className="gt">Our expertise.</span></h1>
           <p className="hero-sub" style={{ marginBottom: '2rem' }}>
-            Tailored AI-powered marketing strategies for every industry in New Zealand. Click any industry to explore how we drive real growth.
+            AI-powered marketing strategies shaped around how customers buy in your sector. Explore how we drive growth for businesses like yours.
           </p>
           {/* Search */}
           <div style={{ position: 'relative', maxWidth: '440px', margin: '0 auto' }}>
-            <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--tx3)', fontSize: '.9rem' }}>🔍</span>
+            <span style={{ position: 'absolute', left: '1.1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--tx3)' }}><Icon name="search" size={17} /></span>
             <input
               type="text"
-              placeholder="Search industries..."
+              placeholder="Search industries" aria-label="Search industries"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ paddingLeft: '2.8rem', background: 'rgba(255,255,255,.06)', border: '1px solid var(--bd2)' }}
+              style={{ paddingLeft: '2.9rem', borderRadius: 999, background: 'var(--sf)' }}
             />
           </div>
         </div>
       </section>
 
       {/* Grid */}
-      <section style={{ background: 'var(--bg2)' }}>
+      <section>
         <div className="cnt">
           {filtered.length === 0 ? (
             <p style={{ textAlign: 'center', color: 'var(--tx3)', padding: '4rem 0' }}>No industries found for &ldquo;{search}&rdquo;</p>
@@ -48,10 +47,10 @@ export default function IndustriesPage() {
               {filtered.map((ind, i) => (
                 <ScrollReveal key={ind.slug} delay={i * 50}>
                   <Link href={`/industries/${ind.slug}`} className="ind-card">
-                    <span className="ind-icon">{ind.icon}</span>
+                    <span className="ind-icon"><Icon emoji={ind.icon} size={20} /></span>
                     <h3>{ind.name}</h3>
                     <p>{ind.shortDesc}</p>
-                    <span className="ind-arrow">Explore →</span>
+                    <span className="ind-arrow">Explore <Icon name="arrow" size={14} /></span>
                   </Link>
                 </ScrollReveal>
               ))}
@@ -64,10 +63,10 @@ export default function IndustriesPage() {
       <section>
         <div className="cnt">
           <ScrollReveal>
-            <div className="ctabox" style={{ padding: '3.5rem 2.5rem' }}>
-              <h2>Don&apos;t see your industry?</h2>
+            <div className="ctabox">
+              <h2>Don&apos;t see <span className="gt">your industry?</span></h2>
               <p>We work with businesses across all industries. Book a free consultation and we&apos;ll build a custom strategy for your specific market.</p>
-              <Link href="/contact" className="btn1">Get a Custom Strategy</Link>
+              <Link href="/contact" className="btn1">Get a custom strategy <Icon name="arrow" size={16} /></Link>
             </div>
           </ScrollReveal>
         </div>

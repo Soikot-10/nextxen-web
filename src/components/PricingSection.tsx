@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import ScrollReveal from '@/components/ScrollReveal'
+import Icon from '@/components/Icon'
 
 const plans = [
   {
@@ -93,169 +95,64 @@ const plans = [
 
 export default function PricingSection() {
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly')
+  const tiers = plans.filter(p => p.monthly !== 'Custom')
+  const ent = plans.find(p => p.monthly === 'Custom')
 
   return (
     <section id="pricing">
       <div className="cnt">
-        <div className="tc">
-          <span className="slbl">Pricing</span>
-          <h2 className="stit">Transparent <span className="gt">Pricing Plans</span></h2>
-          <p className="ssub" style={{ margin: '0 auto' }}>No lock-in contracts. No hidden fees. Cancel anytime.</p>
-
-          {/* Billing toggle */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            background: 'var(--bg3)',
-            border: '1px solid var(--bd)',
-            borderRadius: '50px',
-            padding: '5px',
-            marginTop: '1.8rem',
-            gap: '4px',
-            boxShadow: '0 2px 20px rgba(0,0,0,.3)',
-          }}>
-            <button
-              onClick={() => setBilling('monthly')}
-              style={{
-                padding: '.5rem 1.6rem',
-                borderRadius: '50px',
-                border: 'none',
-                fontFamily: 'var(--ff)',
-                fontWeight: 600,
-                fontSize: '.83rem',
-                cursor: 'pointer',
-                transition: 'all .25s',
-                background: billing === 'monthly' ? 'var(--g1)' : 'transparent',
-                color: billing === 'monthly' ? '#fff' : 'var(--tx2)',
-                boxShadow: billing === 'monthly' ? '0 0 20px rgba(108,92,231,.45)' : 'none',
-                letterSpacing: '.01em',
-              }}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling('annual')}
-              style={{
-                padding: '.5rem 1.6rem',
-                borderRadius: '50px',
-                border: 'none',
-                fontFamily: 'var(--ff)',
-                fontWeight: 600,
-                fontSize: '.83rem',
-                cursor: 'pointer',
-                transition: 'all .25s',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '.5rem',
-                background: billing === 'annual' ? 'var(--g1)' : 'transparent',
-                color: billing === 'annual' ? '#fff' : 'var(--tx2)',
-                boxShadow: billing === 'annual' ? '0 0 20px rgba(108,92,231,.45)' : 'none',
-                letterSpacing: '.01em',
-              }}
-            >
-              Annual
-              <span style={{
-                background: billing === 'annual'
-                  ? 'rgba(255,255,255,.2)'
-                  : 'linear-gradient(135deg,#00cec9,#55efc4)',
-                color: '#fff',
-                fontSize: '.6rem',
-                fontWeight: 800,
-                padding: '.18rem .52rem',
-                borderRadius: '50px',
-                letterSpacing: '.06em',
-                textTransform: 'uppercase' as const,
-                border: billing === 'annual' ? '1px solid rgba(255,255,255,.3)' : 'none',
-              }}>
-                Save 20%
-              </span>
-            </button>
+        <div className="shead">
+          <div>
+            <span className="slbl">Pricing</span>
+            <h2 className="stit">Clear plans. <span className="gt">No lock-in.</span></h2>
+          </div>
+          <div>
+            <p className="ssub">Month-to-month plans that scale with your business. Every plan includes monthly reporting and onboarding in 5–7 days.</p>
+            <div className="bill" role="group" aria-label="Billing period">
+              <button className={billing === 'monthly' ? 'on' : ''} onClick={() => setBilling('monthly')} aria-pressed={billing === 'monthly'}>Monthly</button>
+              <button className={billing === 'annual' ? 'on' : ''} onClick={() => setBilling('annual')} aria-pressed={billing === 'annual'}>Annual <em>Save up to 20%</em></button>
+            </div>
           </div>
         </div>
 
-        <div className="pgrid2" style={{ marginTop: '2rem' }}>
-          {plans.map(p => {
+        <div className="pgrid2">
+          {tiers.map((p, i) => {
             const price = billing === 'annual' ? p.annual : p.monthly
-            const period = price === 'Custom'
-              ? 'tailored pricing'
-              : billing === 'annual'
-              ? 'per month, billed annually'
-              : 'per month'
-
             return (
-              <div key={p.name} className={`pc ${p.cls}`} style={{ marginTop: p.badge ? '14px' : undefined }}>
-                {p.badge && (p.cls === 'pop'
-                  ? <div className="pbdg">{p.badge}</div>
-                  : <div className="ebdg">{p.badge}</div>
-                )}
-
-                {/* Plan name + save pill on same row */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.1rem' }}>
-                  <div className="pname" style={{ margin: 0 }}>{p.name}</div>
-                  {billing === 'annual' && p.annualSave && (
-                    <div style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '.28rem',
-                      background: 'rgba(0,206,201,.08)',
-                      border: '1px solid rgba(0,206,201,.22)',
-                      borderRadius: '50px',
-                      padding: '.22rem .65rem',
-                    }}>
-                      <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                        <path d="M5 1L6.2 3.8L9 4.1L7 6L7.6 9L5 7.5L2.4 9L3 6L1 4.1L3.8 3.8Z"
-                          fill="url(#sg)" />
-                        <defs>
-                          <linearGradient id="sg" x1="0" y1="0" x2="10" y2="10">
-                            <stop stopColor="#00cec9" />
-                            <stop offset="1" stopColor="#55efc4" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      <span style={{
-                        fontSize: '.63rem',
-                        fontWeight: 700,
-                        letterSpacing: '.05em',
-                        background: 'linear-gradient(135deg,#00cec9,#55efc4)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                      }}>
-                        {p.annualSave}
-                      </span>
-                    </div>
-                  )}
+              <ScrollReveal key={p.name} delay={i * 70}>
+                <div className={`pc ${p.cls}`} style={{ height: '100%' }}>
+                  {p.badge && <div className="pbdg">{p.badge}</div>}
+                  <div className="pname">{p.name}</div>
+                  <div className="pprice">
+                    {price}
+                    {billing === 'annual' && p.annualSave && <span className="pstrike">{p.monthly}</span>}
+                  </div>
+                  <div className="pperiod">NZD per month{billing === 'annual' ? ', billed annually' : ''}</div>
+                  <div className="pdesc">{p.desc}</div>
+                  <ul className="pfeats">
+                    {p.features.map(f => <li key={f}>{f}</li>)}
+                  </ul>
+                  <Link href="/contact" className="pbtn">Get started <Icon name="arrow" size={15} /></Link>
                 </div>
-
-                {/* Price with crossed-out monthly when on annual */}
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '.6rem', marginTop: '.5rem' }}>
-                  <div className="pprice">{price}</div>
-                  {billing === 'annual' && p.annualSave && (
-                    <span style={{
-                      fontSize: '.85rem',
-                      color: 'var(--tx3)',
-                      textDecoration: 'line-through',
-                      fontWeight: 500,
-                    }}>
-                      {p.monthly}
-                    </span>
-                  )}
-                </div>
-
-                <div className="pperiod">{period}</div>
-                <div className="pdesc">{p.desc}</div>
-                <ul className="pfeats">
-                  {p.features.map(f => <li key={f}>{f}</li>)}
-                </ul>
-                <Link href="/contact" className="pbtn">Get Started</Link>
-              </div>
+              </ScrollReveal>
             )
           })}
+
+          {ent && (
+            <ScrollReveal className="pent-wrap" delay={100}>
+              <div className="pent">
+                <div>
+                  <h3>{ent.name}</h3>
+                  <p>{ent.desc} Tailored scope and pricing.</p>
+                </div>
+                <ul>{ent.features.map(f => <li key={f}>{f}</li>)}</ul>
+                <Link href="/contact" className="btn2">Talk to us <Icon name="arrow" size={15} /></Link>
+              </div>
+            </ScrollReveal>
+          )}
         </div>
 
-        <p style={{ textAlign: 'center', color: 'var(--tx3)', fontSize: '.76rem', marginTop: '1.4rem' }}>
-          All prices in NZD · No lock-in contracts · Cancel anytime
-        </p>
+        <p className="pnote">All prices in NZD · No lock-in contracts · Cancel anytime</p>
       </div>
     </section>
   )

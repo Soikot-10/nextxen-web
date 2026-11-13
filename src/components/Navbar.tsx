@@ -2,15 +2,14 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import Icon from '@/components/Icon'
 
 const links = [
-  { href: '/', label: 'Home' },
   { href: '/#services', label: 'Services' },
   { href: '/industries', label: 'Industries' },
-  { href: '/blog', label: 'Blog' },
+  { href: '/#work', label: 'Results' },
   { href: '/#pricing', label: 'Pricing' },
-  { href: '/#about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/blog', label: 'Journal' },
 ]
 
 export default function Navbar() {
@@ -19,62 +18,54 @@ export default function Navbar() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', h)
+    const h = () => setScrolled(window.scrollY > 24)
+    h()
+    window.addEventListener('scroll', h, { passive: true })
     return () => window.removeEventListener('scroll', h)
   }, [])
 
-  useEffect(() => { setMobOpen(false) }, [pathname])
+  useEffect(() => {
+    document.body.style.overflow = mobOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobOpen])
 
   return (
     <>
-      <nav id="main-nav" className={scrolled ? 'sc' : ''}>
-        <Link href="/" className="logo">NEXTXEN</Link>
+      <nav id="main-nav" className={scrolled ? 'sc' : ''} aria-label="Main">
+        <Link href="/" className="logo" aria-label="NEXTXEN home"><i />NEXTXEN</Link>
 
         <ul className="nav-links">
           {links.map(link => {
-            const active = link.href === '/'
-              ? pathname === '/'
-              : pathname.startsWith(link.href.replace('#',''))
+            const active = !link.href.includes('#') && pathname.startsWith(link.href)
             return (
               <li key={link.href}>
-                {link.label === 'Free Consultation' ? (
-                  <Link href={link.href} className="nav-cta">{link.label}</Link>
-                ) : (
-                  <Link href={link.href} className={active ? 'active' : ''}>{link.label}</Link>
-                )}
+                <Link href={link.href} className={active ? 'active' : ''}>{link.label}</Link>
               </li>
             )
           })}
-          <li style={{ animationDelay: '.52s' }}>
-            <Link href="/contact" className="nav-cta">Free Consultation</Link>
-          </li>
+          <li><Link href="/contact" className="nav-cta">Book a call</Link></li>
         </ul>
 
-        <button className="hbg" onClick={() => setMobOpen(v => !v)} aria-label="Menu">
-          <span style={{ transform: mobOpen ? 'rotate(45deg) translate(5px,5px)' : '' }} />
-          <span style={{ opacity: mobOpen ? 0 : 1 }} />
-          <span style={{ transform: mobOpen ? 'rotate(-45deg) translate(5px,-5px)' : '' }} />
+        <button className="hbg" onClick={() => setMobOpen(true)} aria-label="Open menu" aria-expanded={mobOpen}>
+          <span /><span />
         </button>
       </nav>
 
-      <div className={`overlay${mobOpen ? ' open' : ''}`} onClick={() => setMobOpen(false)} />
-
-      <nav className={`mobnav${mobOpen ? ' open' : ''}`}>
-        <button className="mobclose" onClick={() => setMobOpen(false)}>✕</button>
+      <div className={`mobnav${mobOpen ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Menu">
+        <button className="mobclose" onClick={() => setMobOpen(false)} aria-label="Close menu">
+          <Icon name="x" size={18} />
+        </button>
         <ul>
-          {links.map(link => (
+          {[{ href: '/', label: 'Home' }, ...links, { href: '/contact', label: 'Contact' }].map(link => (
             <li key={link.href}>
               <Link href={link.href} onClick={() => setMobOpen(false)}>{link.label}</Link>
             </li>
           ))}
-          <li style={{ marginTop: '1rem' }}>
-            <Link href="/contact" onClick={() => setMobOpen(false)} className="btn1" style={{ justifyContent: 'center', width: '100%', display: 'flex' }}>
-              Free Consultation
-            </Link>
-          </li>
         </ul>
-      </nav>
+        <Link href="/contact" onClick={() => setMobOpen(false)} className="btn1" style={{ width: '100%', marginTop: '2rem' }}>
+          Book a free strategy call <Icon name="arrow" size={16} />
+        </Link>
+      </div>
     </>
   )
 }

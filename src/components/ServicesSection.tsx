@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
+import Icon from '@/components/Icon'
 
 interface Service {
   id: string
@@ -201,7 +202,7 @@ export default function ServicesSection() {
         {services.map((s, i) => (
           <ScrollReveal key={s.id} delay={i * 40}>
             <div className="sc2" onClick={() => setActive(s)} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && setActive(s)}>
-              <span className="si">{s.icon}</span>
+              <span className="si"><Icon emoji={s.icon} /></span>
               <h3>{s.title}</h3>
               <p>{s.shortDesc}</p>
               <span className="stag">{s.cardTag}</span>
@@ -216,20 +217,20 @@ export default function ServicesSection() {
         onClick={e => { if (e.target === e.currentTarget) setActive(null) }}
       >
         {active && (
-          <div className="smodal">
-            <button className="smodal-close" onClick={() => setActive(null)}>✕</button>
-            <div className="smodal-icon">{active.icon}</div>
+          <div className="smodal" role="dialog" aria-modal="true" aria-label={active.title}>
+            <button className="smodal-close" onClick={() => setActive(null)} aria-label="Close"><Icon name="x" size={18} /></button>
+            <div className="smodal-icon"><Icon emoji={active.icon} size={24} /></div>
             <span className="smodal-tag">{active.tag}</span>
             <h2>{active.title}</h2>
             <p>{active.desc1}</p>
             <p>{active.desc2}</p>
             <p>{active.desc3}</p>
-            <h3 style={{ fontSize: '.9rem', fontWeight: 700, marginBottom: '.8rem', color: 'var(--ac2)' }}>What&apos;s Included</h3>
+            <h3>What&apos;s included</h3>
             <ul className="smodal-feats">
               {active.feats.map(f => <li key={f}>{f}</li>)}
             </ul>
-            <Link href="/contact" className="btn1" onClick={() => setActive(null)} style={{ width: '100%', justifyContent: 'center' }}>
-              Book Free Consultation 🚀
+            <Link href="/contact" className="btn1" onClick={() => setActive(null)} style={{ width: '100%' }}>
+              Talk to us about {active.title.split(' —')[0]} <Icon name="arrow" size={16} />
             </Link>
           </div>
         )}
