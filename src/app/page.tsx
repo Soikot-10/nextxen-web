@@ -5,6 +5,7 @@ import FaqSection from '@/components/FaqSection'
 import ServicesSection from '@/components/ServicesSection'
 import PricingSection from '@/components/PricingSection'
 import Icon, { type IconName } from '@/components/Icon'
+import HeroNetwork from '@/components/HeroNetwork'
 import { industries } from '@/data/industries'
 import { blogPosts } from '@/data/blogs'
 
@@ -41,22 +42,24 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="hx">
-        <div className="cnt hx-grid">
-          <div>
-            <div className="hx-eyebrow"><b>NZ</b> AI-powered marketing studio, Auckland</div>
-            <h1>Digital growth, <em>engineered</em> with AI.</h1>
-            <p className="hx-sub">We help ambitious New Zealand businesses win online with precision marketing, AI automation and content that actually converts.</p>
-            <div className="hx-btns">
-              <Link href="/contact" className="btn1">Book a free strategy call <Icon name="arrow" size={16} /></Link>
-              <Link href="#work" className="btn2">See client results</Link>
-            </div>
-            <div className="hx-proof">
-              <Stars />
-              <p><strong>5.0 rating</strong> from 150+ NZ businesses · <strong>98%</strong> client retention</p>
-            </div>
+        <div className="cnt hx-top">
+          <div className="hx-eyebrow"><b>NZ</b> AI-powered marketing studio, Auckland</div>
+          <h1>Digital growth, <em>engineered</em> with AI.</h1>
+          <p className="hx-sub">One connected growth engine for ambitious New Zealand businesses: precision marketing, AI automation and content that actually converts.</p>
+          <div className="hx-btns">
+            <Link href="/contact" className="btn1">Book a free strategy call <Icon name="arrow" size={16} /></Link>
+            <Link href="#services" className="btn2">Explore services</Link>
           </div>
+          <div className="hx-proof">
+            <Stars />
+            <p><strong>5.0 rating</strong> from 150+ NZ businesses · <strong>98%</strong> client retention</p>
+          </div>
+        </div>
 
-          <div className="rep" aria-hidden="true">
+        <div className="hx-stage">
+          <HeroNetwork />
+
+          <div className="rep rep-l" aria-hidden="true">
             <div className="rep-card">
               <div className="rep-top">
                 <span>Growth report · 90 days</span>
@@ -68,28 +71,35 @@ export default function HomePage() {
                 <svg viewBox="0 0 400 150" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0" stopColor="#d6fb41" stopOpacity=".28" />
+                      <stop offset="0" stopColor="#d6fb41" stopOpacity=".3" />
                       <stop offset="1" stopColor="#d6fb41" stopOpacity="0" />
                     </linearGradient>
                   </defs>
-                  {[30, 70, 110].map(y => <line key={y} x1="0" x2="400" y1={y} y2={y} stroke="rgba(243,241,236,.07)" />)}
                   <path d="M0 132 C40 128 60 126 90 120 S150 112 180 100 S240 92 270 70 S330 46 360 30 S390 18 400 14 L400 150 L0 150Z" fill="url(#rg)" />
                   <path d="M0 132 C40 128 60 126 90 120 S150 112 180 100 S240 92 270 70 S330 46 360 30 S390 18 400 14" fill="none" stroke="#d6fb41" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                  <path d="M0 138 C60 136 120 134 180 131 S300 126 400 122" fill="none" stroke="rgba(243,241,236,.25)" strokeWidth="1.5" strokeDasharray="4 5" vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
               <div className="rep-kpis">
                 <div><b>3.2×</b><span>Avg. ROI</span></div>
-                <div><b>−67%</b><span>Cost per lead</span></div>
-                <div><b>24/7</b><span>AI response</span></div>
+                <div><b>−67%</b><span>Cost / lead</span></div>
               </div>
             </div>
+          </div>
+
+          <div className="rep-r" aria-hidden="true">
             <div className="rep-float">
               <span className="ic"><Icon name="calendar" size={18} /></span>
               <div>New consultation booked<small>by your AI assistant · 2 min ago</small></div>
             </div>
+            <div className="rep-float">
+              <span className="ic ic2"><Icon name="trend" size={18} /></span>
+              <div>Google Ads optimised<small>Bids updated overnight by AI</small></div>
+            </div>
           </div>
+
+          <p className="hx-hint">Hover or tap a service to explore</p>
         </div>
+
       </section>
 
       {/* CAPABILITIES MARQUEE */}

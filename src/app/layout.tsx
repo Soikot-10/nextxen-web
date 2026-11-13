@@ -3,6 +3,7 @@ import { Inter, Instrument_Serif } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import Assistant from '@/components/Assistant'
 
 const sans = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
 const serif = Instrument_Serif({
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
 }
 
-export const viewport: Viewport = { themeColor: '#0b0b0a', colorScheme: 'dark' }
+export const viewport: Viewport = { themeColor: '#050909', colorScheme: 'dark' }
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <Assistant />
       </body>
     </html>
   )
