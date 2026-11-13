@@ -4,100 +4,146 @@ import AnimatedCounter from '@/components/AnimatedCounter'
 import FaqSection from '@/components/FaqSection'
 import ServicesSection from '@/components/ServicesSection'
 import PricingSection from '@/components/PricingSection'
+import Icon, { type IconName } from '@/components/Icon'
+import HeroNetwork from '@/components/HeroNetwork'
 import { industries } from '@/data/industries'
 import { blogPosts } from '@/data/blogs'
 
-const whyUs = [
-  { icon: '🤖', title: 'AI-First Approach', desc: 'Advanced AI tools to automate tasks, personalise experiences, and give you an edge traditional agencies cannot match.' },
-  { icon: '🇳🇿', title: 'Local NZ Expertise', desc: 'From Auckland to Invercargill — we understand your customers, competition, and what it takes to win in the New Zealand market.' },
-  { icon: '📊', title: 'Data-Driven Results', desc: 'Every decision backed by real data. We track every click, impression, and conversion so you know exactly what your investment returns.' },
-  { icon: '⚡', title: 'Full-Service Agency', desc: 'Logo to Google Ads to AI chatbot — handled under one roof. One team, one vision, one invoice. No juggling multiple agencies.' },
-  { icon: '🎯', title: 'Precision Targeting', desc: 'Advanced audience targeting puts your message in front of exactly the right people at exactly the right moment.' },
-  { icon: '📱', title: '24/7 Performance', desc: 'Your AI chatbot handles enquiries at 3am. Campaigns optimise overnight. Content posts automatically. Always on.' },
+const approach: { icon: IconName; title: string; desc: string }[] = [
+  { icon: 'cpu', title: 'AI-first, human-led', desc: 'We use AI to automate the busywork, personalise every touchpoint and move faster than traditional agencies, with senior people making the calls.' },
+  { icon: 'pin', title: 'Built for New Zealand', desc: 'From Auckland to Invercargill, we know your customers, your competitors and what it takes to win in a small, word-of-mouth market.' },
+  { icon: 'chart', title: 'Measured to the dollar', desc: 'Every click, call and conversion is tracked, so you always know exactly what your investment is returning.' },
+  { icon: 'users', title: 'One team, end to end', desc: 'Brand, website, ads, content and automation under one roof. One strategy, one point of contact, one invoice.' },
+  { icon: 'target', title: 'Precision targeting', desc: 'Your message reaches the right people at the right moment, so budget goes to buyers rather than browsers.' },
+  { icon: 'clock', title: 'Always on', desc: 'AI assistants answer enquiries at 3am, campaigns optimise overnight and content publishes on schedule.' },
+]
+
+const steps = [
+  { title: 'Discovery call', desc: 'A 30-minute conversation about your business, goals and what has or hasn’t worked so far.', when: 'Day 1' },
+  { title: 'Strategy & proposal', desc: 'A clear plan with channels, budget and targets, tailored to your market. No templates.', when: 'Within 48 hours' },
+  { title: 'Build & launch', desc: 'We set up tracking, creative, campaigns and automations, then go live.', when: '5–7 days' },
+  { title: 'Optimise & report', desc: 'Continuous testing and a plain-English monthly report on leads, cost and return.', when: 'Every month' },
 ]
 
 const testimonials = [
-  { name: 'Rachel Thompson', company: 'Thompson Real Estate, Auckland', initials: 'RT', text: 'NEXTXEN transformed our lead generation. We went from 8 leads a month to 74 qualified buyer and seller enquiries. The ROI has been extraordinary.', stars: 5 },
-  { name: 'Mike Patterson', company: 'Patterson Electrical, Waikato', initials: 'MP', text: "Best investment we've made in marketing. Our phone rings constantly now. Google Ads set up perfectly — every lead is local and qualified.", stars: 5 },
-  { name: 'Sarah Nguyen', company: 'Luxe Beauty Studio, Wellington', initials: 'SN', text: 'Our Instagram following grew from 800 to 14,000+ and mid-week bookings tripled. The team at NEXTXEN genuinely cares about results.', stars: 5 },
+  { name: 'Rachel Thompson', company: 'Thompson Real Estate, Auckland', initials: 'RT', metric: '8 → 74', metricLabel: 'qualified enquiries per month', text: 'NEXTXEN transformed our lead generation. The ROI has been extraordinary.' },
+  { name: 'Mike Patterson', company: 'Patterson Electrical, Waikato', initials: 'MP', metric: '100%', metricLabel: 'local, qualified leads', text: 'Best investment we’ve made in marketing. Our phone rings constantly now. Google Ads set up perfectly.' },
+  { name: 'Sarah Nguyen', company: 'Luxe Beauty Studio, Wellington', initials: 'SN', metric: '800 → 14k', metricLabel: 'Instagram followers', text: 'Mid-week bookings tripled. The team genuinely cares about results.' },
 ]
 
+const capabilities = ['Brand & Identity', 'Websites', 'Search & SEO', 'Google Ads', 'Meta Ads', 'Content Production', 'AI Assistants', 'Automation', 'Local Marketing']
 
+function Stars() {
+  return <span className="stars" aria-label="5 out of 5 stars">{[0, 1, 2, 3, 4].map(i => <Icon key={i} name="star" size={14} stroke={0} className="star-fill" />)}</span>
+}
 
 export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="hero">
-        <div className="orb orb1" />
-        <div className="orb orb2" />
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <div className="hero-badge">
-            <span className="pulse-dot" />
-            🇳🇿 New Zealand&apos;s Premier AI Marketing Agency
+      <section className="hx">
+        <div className="cnt hx-top">
+          <div className="hx-eyebrow"><b>NZ</b> AI-powered marketing studio, Auckland</div>
+          <h1>Digital growth, <em>engineered</em> with AI.</h1>
+          <p className="hx-sub">One connected growth engine for ambitious New Zealand businesses: precision marketing, AI automation and content that actually converts.</p>
+          <div className="hx-btns">
+            <Link href="/contact" className="btn1">Book a free strategy call <Icon name="arrow" size={16} /></Link>
+            <Link href="#services" className="btn2">Explore services</Link>
           </div>
-          <h1>
-            <span className="gt">Next Generation</span><br />
-            Digital Growth<br />
-            <span className="gt2">Powered by AI</span>
-          </h1>
-          <p className="hero-sub">
-            We help New Zealand businesses dominate online with AI automation, precision digital marketing, and world-class content creation.
-          </p>
-          <div className="hero-btns">
-            <Link href="/contact" className="btn1">🚀 Get Free Consultation</Link>
-            <Link href="#pricing" className="btn2">View Pricing →</Link>
-          </div>
-          <div className="hstats">
-            <div className="stat"><div className="stat-n">150+</div><div className="stat-l">NZ Clients</div></div>
-            <div className="sdiv" />
-            <div className="stat"><div className="stat-n">3.2×</div><div className="stat-l">Avg. ROI</div></div>
-            <div className="sdiv" />
-            <div className="stat"><div className="stat-n">98%</div><div className="stat-l">Retention</div></div>
-            <div className="sdiv" />
-            <div className="stat"><div className="stat-n">5★</div><div className="stat-l">Rating</div></div>
+          <div className="hx-proof">
+            <Stars />
+            <p><strong>5.0 rating</strong> from 150+ NZ businesses · <strong>98%</strong> client retention</p>
           </div>
         </div>
+
+        <div className="hx-stage">
+          <HeroNetwork />
+
+          <div className="rep rep-l" aria-hidden="true">
+            <div className="rep-card">
+              <div className="rep-top">
+                <span>Growth report · 90 days</span>
+                <span className="rep-live"><i />Live</span>
+              </div>
+              <div className="rep-big"><strong>74</strong><em>+825%</em></div>
+              <div className="rep-lbl">Qualified leads per month</div>
+              <div className="rep-chart">
+                <svg viewBox="0 0 400 150" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor="#d6fb41" stopOpacity=".3" />
+                      <stop offset="1" stopColor="#d6fb41" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 132 C40 128 60 126 90 120 S150 112 180 100 S240 92 270 70 S330 46 360 30 S390 18 400 14 L400 150 L0 150Z" fill="url(#rg)" />
+                  <path d="M0 132 C40 128 60 126 90 120 S150 112 180 100 S240 92 270 70 S330 46 360 30 S390 18 400 14" fill="none" stroke="#d6fb41" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+                </svg>
+              </div>
+              <div className="rep-kpis">
+                <div><b>3.2×</b><span>Avg. ROI</span></div>
+                <div><b>−67%</b><span>Cost / lead</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rep-r" aria-hidden="true">
+            <div className="rep-float">
+              <span className="ic"><Icon name="calendar" size={18} /></span>
+              <div>New consultation booked<small>by your AI assistant · 2 min ago</small></div>
+            </div>
+            <div className="rep-float">
+              <span className="ic ic2"><Icon name="trend" size={18} /></span>
+              <div>Google Ads optimised<small>Bids updated overnight by AI</small></div>
+            </div>
+          </div>
+
+          <p className="hx-hint">Hover or tap a service to explore</p>
+        </div>
+
       </section>
 
-      {/* MARQUEE */}
-      <div className="mq">
+      {/* CAPABILITIES MARQUEE */}
+      <div className="mq" aria-hidden="true">
         <div className="mq-track">
-          {[...Array(2)].map((_, ri) =>
-            ['AI-Powered Marketing','Lead Generation','SEO Dominance','Facebook Ads','Google Ads','AI Chatbots','Content Creation','Brand Strategy','Local SEO','NZ Based'].map((item, i) => (
-              <div key={`${ri}-${i}`} className="mi"><span className="md" />{item}</div>
-            ))
-          )}
+          {[0, 1].map(ri => (
+            <div key={ri} className="mi">
+              {capabilities.map(item => <span key={item} style={{ display: 'contents' }}>{item}<span className="md" /></span>)}
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* COUNTERS */}
-      <section style={{ background: 'var(--bg2)' }}>
+      {/* NUMBERS */}
+      <section style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
         <div className="cnt">
           <div className="cgrid">
-            {[{t:150,s:'+',l:'NZ Businesses Served'},{t:8,p:'$',s:'M+',l:'Revenue Generated'},{t:98,s:'%',l:'Client Retention'},{t:5,s:'★',l:'Google Rating'}].map((c,i) => (
-              <div key={c.l} className="ci-box">
-                <div className="cn"><AnimatedCounter target={c.t} prefix={c.p||''} suffix={c.s} /></div>
-                <div className="cl">{c.l}</div>
-              </div>
+            {[{ t: 150, s: '+', l: 'New Zealand businesses served' }, { t: 8, p: '$', s: 'M+', l: 'Client revenue generated' }, { t: 98, s: '%', l: 'Client retention rate' }, { t: 3, s: '.2×', l: 'Average return on ad spend' }].map((c, i) => (
+              <ScrollReveal key={c.l} delay={i * 80}>
+                <div className="ci-box">
+                  <div className="cn"><AnimatedCounter target={c.t} prefix={c.p || ''} suffix={c.s} /></div>
+                  <div className="cl">{c.l}</div>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* WHY US */}
-      <section id="about">
+      {/* APPROACH */}
+      <section id="about" style={{ paddingTop: '4rem' }}>
         <div className="cnt">
-          <ScrollReveal className="tc">
-            <span className="slbl">Why Choose Us</span>
-            <h2 className="stit">Built Different. <span className="gt">Delivers Different.</span></h2>
-            <p className="ssub">We combine cutting-edge AI with deep NZ market knowledge to drive real, measurable results for every client.</p>
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">Why NEXTXEN</span>
+              <h2 className="stit">Built different. <span className="gt">Delivers different.</span></h2>
+            </div>
+            <p className="ssub">Cutting-edge AI paired with deep New Zealand market knowledge, focused on one thing: measurable growth for your business.</p>
           </ScrollReveal>
           <div className="why-grid">
-            {whyUs.map((w,i) => (
-              <ScrollReveal key={w.title} delay={i * 80}>
-                <div className="wc card3d">
-                  <div className="wi">{w.icon}</div>
+            {approach.map((w, i) => (
+              <ScrollReveal key={w.title} delay={(i % 3) * 90}>
+                <div className="wc">
+                  <div className="wc-n"><span>{String(i + 1).padStart(2, '0')}</span><span className="wi"><Icon name={w.icon} size={20} /></span></div>
                   <h3>{w.title}</h3>
                   <p>{w.desc}</p>
                 </div>
@@ -108,60 +154,37 @@ export default function HomePage() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" style={{ background: 'var(--bg2)' }}>
+      <section id="services" style={{ background: 'var(--bg2)', borderTop: '1px solid var(--bd)', borderBottom: '1px solid var(--bd)' }}>
         <div className="cnt">
-          <ScrollReveal className="tc">
-            <span className="slbl">What We Do</span>
-            <h2 className="stit">Everything Your Business <span className="gt">Needs to Grow</span></h2>
-            <p className="ssub">Click any service to learn more. A complete suite of digital marketing and AI services designed for NZ businesses ready to scale.</p>
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">Services</span>
+              <h2 className="stit">Everything you need <span className="gt">to grow.</span></h2>
+            </div>
+            <p className="ssub">A complete suite of marketing, creative and AI services, designed for New Zealand businesses ready to scale. Select any service to see what&apos;s included.</p>
           </ScrollReveal>
           <ServicesSection />
         </div>
       </section>
 
-      {/* INDUSTRIES PREVIEW */}
+      {/* PROCESS */}
       <section>
         <div className="cnt">
-          <ScrollReveal className="tc">
-            <span className="slbl">Industries We Serve</span>
-            <h2 className="stit">Your Industry. <span className="gt2">Our Expertise.</span></h2>
-            <p className="ssub">Tailored strategies for every industry. Click any industry to see how we&apos;ve driven growth for businesses like yours.</p>
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">How we work</span>
+              <h2 className="stit">From first call to <span className="gt">first results.</span></h2>
+            </div>
+            <p className="ssub">A simple, transparent process with no long contracts and no surprises. Most clients are live within a week.</p>
           </ScrollReveal>
-          <div className="ind-grid" style={{ marginTop: '3.5rem' }}>
-            {industries.slice(0,8).map((ind,i) => (
-              <ScrollReveal key={ind.slug} delay={i * 60}>
-                <Link href={`/industries/${ind.slug}`} className="ind-card">
-                  <span className="ind-icon">{ind.icon}</span>
-                  <h3>{ind.name}</h3>
-                  <p>{ind.shortDesc.slice(0,65)}…</p>
-                  <span className="ind-arrow">Explore →</span>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
-          <div className="tc" style={{ marginTop: '2.5rem' }}>
-            <Link href="/industries" className="btn2" style={{ display: 'inline-flex' }}>View All 12 Industries →</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section id="testimonials" style={{ background: 'var(--bg2)' }}>
-        <div className="cnt">
-          <ScrollReveal className="tc">
-            <span className="slbl">Client Results</span>
-            <h2 className="stit">What Our Clients <span className="gt">Are Saying</span></h2>
-          </ScrollReveal>
-          <div className="tgrid">
-            {testimonials.map((t,i) => (
-              <ScrollReveal key={t.name} delay={i * 100}>
-                <div className="tc2">
-                  <div className="stars">{'★'.repeat(t.stars)}</div>
-                  <p className="ttxt">&ldquo;{t.text}&rdquo;</p>
-                  <div className="tau">
-                    <div className="tav">{t.initials}</div>
-                    <div><div className="tan">{t.name}</div><div className="tab">{t.company}</div></div>
-                  </div>
+          <div className="steps">
+            {steps.map((s, i) => (
+              <ScrollReveal key={s.title} delay={i * 90}>
+                <div className="step">
+                  <div className="step-n">0{i + 1}</div>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+                  <small>{s.when}</small>
                 </div>
               </ScrollReveal>
             ))}
@@ -169,87 +192,121 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PRICING */}
-      <PricingSection />
-
-      {/* BLOG PREVIEW */}
-      <section style={{ background: 'var(--bg2)' }}>
+      {/* RESULTS */}
+      <section id="work" style={{ background: 'var(--bg2)', borderTop: '1px solid var(--bd)', borderBottom: '1px solid var(--bd)' }}>
         <div className="cnt">
-          <ScrollReveal className="tc">
-            <span className="slbl">Insights</span>
-            <h2 className="stit">Latest from the <span className="gt">Blog</span></h2>
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">Client results</span>
+              <h2 className="stit">Real businesses. <span className="gt">Real numbers.</span></h2>
+            </div>
+            <p className="ssub">We measure success the way you do: more enquiries, more bookings and more revenue.</p>
           </ScrollReveal>
-          <div className="bgrid">
-            {blogPosts.slice(0,3).map((post,i) => (
+          <div className="tgrid">
+            {testimonials.map((t, i) => (
+              <ScrollReveal key={t.name} delay={i * 100}>
+                <figure className="tc2">
+                  <div className="tmetric">{t.metric}</div>
+                  <div className="tmetric-l">{t.metricLabel}</div>
+                  <blockquote className="ttxt">&ldquo;{t.text}&rdquo;</blockquote>
+                  <figcaption className="tau">
+                    <div className="tav">{t.initials}</div>
+                    <div><div className="tan">{t.name}</div><div className="tab">{t.company}</div></div>
+                  </figcaption>
+                </figure>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INDUSTRIES */}
+      <section>
+        <div className="cnt">
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">Industries</span>
+              <h2 className="stit">Your industry. <span className="gt">Our expertise.</span></h2>
+            </div>
+            <div>
+              <p className="ssub" style={{ marginBottom: '1.4rem' }}>Strategies shaped around how your customers actually buy, whether you sell homes, appointments or products.</p>
+              <Link href="/industries" className="tlink">All 12 industries <Icon name="arrow" size={15} /></Link>
+            </div>
+          </ScrollReveal>
+          <div className="ind-grid" style={{ marginTop: 0 }}>
+            {industries.slice(0, 8).map((ind, i) => (
+              <ScrollReveal key={ind.slug} delay={(i % 4) * 70}>
+                <Link href={`/industries/${ind.slug}`} className="ind-card">
+                  <span className="ind-icon"><Icon emoji={ind.icon} size={20} /></span>
+                  <h3>{ind.name}</h3>
+                  <p>{ind.shortDesc}</p>
+                  <span className="ind-arrow">Explore <Icon name="arrow" size={14} /></span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <div style={{ background: 'var(--bg2)', borderTop: '1px solid var(--bd)', borderBottom: '1px solid var(--bd)' }}>
+        <PricingSection />
+      </div>
+
+      {/* JOURNAL */}
+      <section>
+        <div className="cnt">
+          <ScrollReveal className="shead">
+            <div>
+              <span className="slbl">Journal</span>
+              <h2 className="stit">Ideas worth <span className="gt">stealing.</span></h2>
+            </div>
+            <div>
+              <p className="ssub" style={{ marginBottom: '1.4rem' }}>Practical guides on AI, search and advertising for New Zealand business owners.</p>
+              <Link href="/blog" className="tlink">Read the journal <Icon name="arrow" size={15} /></Link>
+            </div>
+          </ScrollReveal>
+          <div className="bgrid" style={{ marginTop: 0 }}>
+            {blogPosts.slice(0, 3).map((post, i) => (
               <ScrollReveal key={post.slug} delay={i * 80}>
                 <Link href={`/blog/${post.slug}`} className="bc">
-                  <div className="bthumb" style={{ background: `linear-gradient(135deg, ${post.featuredGradient.replace('from-','').replace(' to-',' ,')})` }}>📖</div>
+                  <div className="bthumb"><Icon name="arrowUpRight" size={18} /><span>{post.category}</span></div>
                   <div className="bbody">
-                    <div className="bmeta">
-                      <span className="bcat">{post.category}</span>
-                      <span className="bdate">{post.publishDate}</span>
-                    </div>
+                    <div className="bmeta"><span className="bdate">{post.publishDate} · {post.readTime}</span></div>
                     <h3>{post.title}</h3>
-                    <p>{post.excerpt.slice(0, 100)}…</p>
+                    <p>{post.excerpt.slice(0, 120)}…</p>
                   </div>
                 </Link>
               </ScrollReveal>
             ))}
           </div>
-          <div className="tc" style={{ marginTop: '2.5rem' }}>
-            <Link href="/blog" className="btn2" style={{ display: 'inline-flex' }}>View All Posts →</Link>
-          </div>
-        </div>
-      </section>
-
-      {/* TRUST STRIP */}
-      <div className="tstrip">
-        <div className="cnt">
-          <div className="tsin">
-            <div className="tbdg">🔒 No Lock-In Contracts</div><div className="tsep" />
-            <div className="tbdg">📊 Monthly Reports</div><div className="tsep" />
-            <div className="tbdg">⚡ 5–7 Day Onboarding</div><div className="tsep" />
-            <div className="tbdg">🤖 AI-Powered Tools</div><div className="tsep" />
-            <div className="tbdg">⭐ 5-Star Google Rating</div>
-          </div>
-        </div>
-      </div>
-
-      {/* NEWSLETTER */}
-      <section>
-        <div className="cnt">
-          <div className="nlbox">
-            <span className="slbl" style={{ textAlign: 'center' }}>Free Marketing Tips</span>
-            <h2>Get Weekly <span className="gt">Growth Strategies</span></h2>
-            <p>Join 2,400+ NZ business owners getting free AI marketing tips every week. No spam, unsubscribe anytime.</p>
-            <div className="nlform">
-              <input type="email" placeholder="your@email.co.nz" />
-              <button>Subscribe Free</button>
-            </div>
-          </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section id="faq" style={{ background: 'var(--bg2)' }}>
-        <div className="cnt">
-          <ScrollReveal className="tc">
+      <section id="faq" style={{ borderTop: '1px solid var(--bd)' }}>
+        <div className="cnt faq-grid">
+          <div className="stit-wrap">
             <span className="slbl">FAQ</span>
-            <h2 className="stit">Common <span className="gt">Questions</span></h2>
-          </ScrollReveal>
+            <h2 className="stit">Questions, <span className="gt">answered.</span></h2>
+            <p className="ssub" style={{ marginTop: '1rem' }}>Can&apos;t find what you need? Email <a href="mailto:hello@nextxen.co.nz" style={{ color: 'var(--tx)' }}>hello@nextxen.co.nz</a>.</p>
+          </div>
           <FaqSection />
         </div>
       </section>
 
       {/* CTA */}
-      <section>
+      <section style={{ paddingTop: '2rem' }}>
         <div className="cnt">
           <ScrollReveal>
             <div className="ctabox">
-              <span className="slbl" style={{ position: 'relative' }}>Ready to Grow?</span>
-              <h2>Let&apos;s Build Your <span className="gt3">Growth Engine</span></h2>
-              <p>Book a free 30-minute strategy session. No obligation, no sales pressure — just a genuine conversation about your business goals and how we can help.</p>
-              <Link href="/contact" className="btn1">🚀 Book Free Strategy Session</Link>
+              <span className="slbl">Free 30-minute strategy session</span>
+              <h2>Let&apos;s build your <span className="gt">growth engine.</span></h2>
+              <p>No obligation and no sales pressure. Just an honest conversation about your goals and how we can help you reach them.</p>
+              <div className="cta-btns">
+                <Link href="/contact" className="btn1">Book your session <Icon name="arrow" size={16} /></Link>
+                <a href="mailto:hello@nextxen.co.nz" className="btn2">hello@nextxen.co.nz</a>
+              </div>
             </div>
           </ScrollReveal>
         </div>
