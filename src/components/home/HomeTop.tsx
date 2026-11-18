@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type PointerEvent, type ReactNode } from 'react'
 import Link from 'next/link'
 import Icon, { type IconName } from '@/components/Icon'
 import { openService } from '@/components/three/sceneStore'
@@ -20,6 +20,25 @@ const box = (x: number, y: number, w?: number, h?: number): CSSProperties => ({
   ...(h !== undefined ? { height: `${(h / H) * 100}%` } : {}),
 })
 const fs = (px: number): CSSProperties => ({ fontSize: `calc(var(--u) * ${px})` })
+// a copy of one region of an artwork, laid exactly over its painted twin, so it can lift off the page
+const lift = (img: string, x: number, y: number, w: number, h: number): CSSProperties => ({
+  backgroundImage: `url(/home2/${img}.webp)`,
+  backgroundSize: `${(W / w) * 100}% ${(H / h) * 100}%`,
+  backgroundPosition: `${(x / (W - w)) * 100}% ${(y / (H - h)) * 100}%`,
+})
+// pointer tracking for 3D tilt, cursor light and magnetic pull (CSS reads the variables)
+const track = (e: PointerEvent<HTMLElement>) => {
+  const el = e.currentTarget, r = el.getBoundingClientRect()
+  const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height
+  el.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`); el.style.setProperty('--my', `${(py * 100).toFixed(1)}%`)
+  el.style.setProperty('--px', (px - 0.5).toFixed(3)); el.style.setProperty('--py', (py - 0.5).toFixed(3))
+}
+const untrack = (e: PointerEvent<HTMLElement>) => { e.currentTarget.style.setProperty('--px', '0'); e.currentTarget.style.setProperty('--py', '0') }
+const liftMask = (img: string, x: number, y: number, w: number, h: number): CSSProperties => {
+  const l = lift(img, x, y, w, h)
+  return { WebkitMaskImage: l.backgroundImage, maskImage: l.backgroundImage, WebkitMaskSize: l.backgroundSize, maskSize: l.backgroundSize, WebkitMaskPosition: l.backgroundPosition, maskPosition: l.backgroundPosition, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', maskMode: 'luminance' } as CSSProperties
+}
+const hover3d = { onPointerMove: track, onPointerLeave: untrack }
 
 function useOnScreen<T extends Element>(margin = '160px') {
   const ref = useRef<T>(null)
@@ -210,8 +229,18 @@ function Hero() {
           ))}
           <Link href="/contact" className="nt-hit nt-pill gold" style={box(1405, 19, 178, 48)}><span className="sr-only">Book a call</span><i className="nt-sweep" /></Link>
         </nav>
-        <Link href="/contact" className="nt-hit nt-pill gold" style={box(59, 552, 229, 46)}><span className="sr-only">Book a free strategy call</span><i className="nt-sweep" /></Link>
-        <a href="#nt-services" className="nt-hit nt-pill ghost" style={box(306, 553, 163, 41)}><span className="sr-only">Explore services</span></a>
+        <Link href="/contact" className="nt-cta gold" style={box(48, 551, 241, 48)} {...hover3d}>
+          <span className="cta-body"><i className="nt-lift" style={lift('hero', 48, 551, 241, 48)} /><i className="cta-shine" /><i className="nt-sweep" /></span>
+          <span className="sr-only">Book a free strategy call</span>
+        </Link>
+        <a href="#nt-services" className="nt-cta ghost" style={box(306, 551, 165, 49)} {...hover3d}>
+          <span className="cta-body"><i className="nt-lift" style={lift('hero', 306, 551, 165, 49)} /><i className="cta-shine" /></span>
+          <span className="sr-only">Explore services</span>
+        </a>
+        {/* the services card on the wooden panel lifts off it */}
+        <div className="nt-panel" style={box(527, 396, 242, 252)} {...hover3d} aria-hidden="true">
+          <span className="panel-body"><i className="nt-lift" style={lift('hero', 527, 396, 242, 252)} /><i className="panel-spot" /></span>
+        </div>
         <Link href="/contact" className="nt-hit nt-pill ghost" style={box(1262, 125, 150, 41)}><span className="sr-only">Book a call</span></Link>
         <Link href="/blog" className="nt-hit nt-pill ghost round" style={box(1429, 120, 46, 46)}><span className="sr-only">Search the Journal</span></Link>
         <a href="#nt-services" className="nt-hit nt-pill ghost round" style={box(1494, 120, 46, 46)}><span className="sr-only">Browse all services</span></a>
@@ -254,13 +283,17 @@ function Why() {
           <path className="plat-run" pathLength={1} d="M110 812 Q 100 780 160 776 L 1510 776 Q 1572 780 1562 812" />
         </svg>
         {WHY.map((c, i) => (
-          <article key={c.k} className="nt-card" style={{ ...box(c.x, 266, c.w, 526), '--c': c.c, '--i': i } as CSSProperties}
-            onPointerMove={e => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`); e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`) }}>
-            <i className="nt-card-spot" aria-hidden="true" />
-            <i className="nt-card-ic" aria-hidden="true" />
+          <article key={c.k} className="nt-card" style={{ ...box(c.x, 266, c.w, 526), '--c': c.c, '--i': i } as CSSProperties} {...hover3d}>
+            <span className="card-body" aria-hidden="true">
+              <i className="nt-lift" style={lift('why', c.x, 266, c.w, 526)} />
+              <i className="nt-card-ic" />
+              <i className="nt-card-spot" />
+              <i className="card-rim" />
+            </span>
             <div className="sr-only"><p>{`0${i + 1} ${c.k}`}</p><h3>{c.t}</h3><p>{c.d}</p><p>{c.a}: {c.ad}</p></div>
           </article>
         ))}
+        <span className="nt-word" style={box(652, 832, 368, 62)} aria-hidden="true"><i className="word-glow" /><i className="nt-lift" style={lift('why', 652, 832, 368, 62)} /><i className="word-shine" style={liftMask('why', 652, 832, 368, 62)} /></span>
         <i className="nt-heart" style={box(285, 20, 150, 150)} aria-hidden="true" />
         <i className="nt-heart r" style={box(1355, 105, 90, 90)} aria-hidden="true" />
         <span className="nt-motes" aria-hidden="true">{Array.from({ length: 14 }, (_, i) => <i key={i} style={{ '--k': i } as CSSProperties} />)}</span>
@@ -329,6 +362,10 @@ function Explorer() {
       <Skin name="services" />
       <div className="nt-in">
         <h2 className="sr-only" id="nt-svc-h">Services: everything you need to grow, in one connected system.</h2>
+        <span className="nt-eyebrow" style={box(668, 12, 336, 46)} {...hover3d} aria-hidden="true">
+          <i className="eb-line l" /><i className="eb-line r" />
+          <span className="eb-word"><i className="eb-patch" /><i className="eb-glow" /><span className="eb-ink"><i className="nt-lift" style={{ ...lift('services', 740, 14, 204, 42), ...liftMask('services', 740, 14, 204, 42) }} /><b className="eb-live" style={fs(21)}>SERVICES</b></span></span>
+        </span>
 
         {/* tabs */}
         <div className="nt-tabs" role="tablist" aria-label="Core services">
@@ -369,8 +406,12 @@ function Explorer() {
         {/* stat tiles */}
         {cards.map((c, i) => (
           <button key={i} type="button" className={`nt-tile${i === cardIdx ? ' on' : ''}`} style={{ ...box(528, TILE_Y[i], 236, TILE_H[i]), '--i': i } as CSSProperties}
-            aria-pressed={i === cardIdx} aria-label={`${c.value} ${c.aria}: show the list`} onClick={() => setCardIdx(i)}>
-            {i === 0 && <span className="nt-tile-txt"><b style={fs(42)}><Count to={c.value} /></b><small style={fs(15.4)}>{c.label}</small></span>}
+            aria-pressed={i === cardIdx} aria-label={`${c.value} ${c.aria}: show the list`} onClick={() => setCardIdx(i)} {...hover3d}>
+            <span className="tile-body" aria-hidden="true">
+              <i className="nt-lift" style={lift('services', 528, TILE_Y[i], 236, TILE_H[i])} />
+              <i className="tile-sweep" />
+              {i === 0 && <span className="nt-tile-txt"><b style={fs(42)}><Count to={c.value} /></b><small style={fs(15.4)}>{c.label}</small></span>}
+            </span>
           </button>
         ))}
 
