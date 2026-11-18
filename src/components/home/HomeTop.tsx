@@ -42,6 +42,31 @@ function Skin({ name, priority = false }: { name: string; priority?: boolean }) 
   )
 }
 
+// a 3D wireframe globe: meridians and parallels on a CSS 3D stage, spinning on a tilted axis
+function Globe({ className, style }: { className: string; style: CSSProperties }) {
+  return (
+    <span className={`nt-globe ${className}`} style={style} aria-hidden="true">
+      <span className="g-tilt">
+        <span className="g-spin">
+          {[0, 30, 60, 90, 120, 150].map(d => <i key={`m${d}`} className="g-m" style={{ '--r': `${d}deg` } as CSSProperties} />)}
+          {[-60, -30, 0, 30, 60].map(l => <i key={`p${l}`} className="g-p" style={{ '--s': Math.cos((l * Math.PI) / 180).toFixed(3), '--z': (Math.sin((l * Math.PI) / 180) * 50).toFixed(2) + '%' } as CSSProperties} />)}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+// a hexagon N badge cut from the artwork, sitting exactly on its painted twin: lifts and glows on hover
+function Badge({ img, style }: { img: string; style: CSSProperties }) {
+  return (
+    <span className="nt-badge" style={style} aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`/home2/${img}.webp`} alt="" draggable={false} />
+      <i className="b-shine" />
+    </span>
+  )
+}
+
 /* ═════════════════════════════ 1 · HERO ═════════════════════════════ */
 const C = { x: 1117, y: 427 }             // growth-engine centre
 const ORB = { rx: 292, ry: 212 }          // the bubbles' orbit
@@ -55,7 +80,7 @@ const NODES = [
   { id: 'chatbot', label: 'AI Chatbots', x: 847, y: 415, c: '#3ff3ff' },
   { id: 'automation', label: 'AI Automation', x: 902, y: 270, c: '#5b8cff' },
 ].map(n => ({ ...n, a0: Math.atan2((n.y - C.y) / ORB.ry, (n.x - C.x) / ORB.rx) }))
-const TURN = 80 // seconds per orbit
+const TURN = 72 // seconds per orbit
 
 function Hero() {
   const [ref, on] = useOnScreen<HTMLElement>('60px')
@@ -71,38 +96,36 @@ function Hero() {
     let raf = 0
     const place = (t: number) => {
       const s = state.current
-      const dt = s.last ? Math.min(0.05, (t - s.last) / 1000) : 0
+      const dt = s.last ? Math.min(0.1, (t - s.last) / 1000) : 0
       s.last = t
-      // ease the orbit to a stop while a bubble is hovered
+      // glide the orbit to a stop while a bubble is hovered, and back up again after
       const goal = hover.current >= 0 ? 0 : 1
-      s.speed += (goal - s.speed) * Math.min(1, dt * (goal ? 3 : 12))
-      if (!goal && s.speed < 0.02) s.speed = 0
+      s.speed += (goal - s.speed) * (1 - Math.exp(-dt * (goal ? 2.2 : 7)))
+      if (!goal && s.speed < 0.004) s.speed = 0
       if (!still) s.ang += dt * s.speed * (Math.PI * 2 / TURN)
       NODES.forEach((n, i) => {
         const a = n.a0 + s.ang
         const depth = Math.sin(a)                         // +1 front (bottom), −1 back (top)
-        const bob = still ? 0 : Math.sin(t / 900 + i * 1.7) * 4
+        const bob = still ? 0 : Math.sin(t / 1400 + i * 1.7) * 3
         const x = C.x + ORB.rx * Math.cos(a), y = C.y + ORB.ry * Math.sin(a) + bob
         const sc = (1 + depth * 0.07) * (hover.current === i ? 1.08 : 1)
         const el = nodeEls.current[i]
         if (el) {
-          el.style.left = `${((x - 90) / W) * 100}%`
-          el.style.top = `${((y - 75) / H) * 100}%`
-          el.style.transform = `scale(${sc.toFixed(3)}) rotateY(${(Math.cos(a) * -10).toFixed(1)}deg)`
+          // transform only (no layout, no per-frame filters): sub-pixel smooth, GPU composited
+          el.style.transform = `translate3d(${(((x - 90) / 180) * 100).toFixed(3)}%, ${(((y - 75) / 155) * 100).toFixed(3)}%, 0) scale(${sc.toFixed(4)}) rotateY(${(Math.cos(a) * -10).toFixed(2)}deg)`
           el.style.zIndex = String(10 + Math.round(depth * 5))
-          el.style.filter = `brightness(${(0.9 + depth * 0.1 + (hover.current === i ? 0.18 : 0)).toFixed(3)})`
         }
         // the gold rod from the engine to the bubble's pedestal
         const ex = x, ey = y + 22
         const dx = ex - C.x, dy = ey - C.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L
         const sx = C.x + ux * 128, sy = C.y + uy * 128, tx = ex - ux * 62, ty = ey - uy * 52
         const g = rods.current[i]
-        if (g) g.querySelectorAll('line').forEach(l => { l.setAttribute('x1', sx.toFixed(1)); l.setAttribute('y1', sy.toFixed(1)); l.setAttribute('x2', tx.toFixed(1)); l.setAttribute('y2', ty.toFixed(1)) })
+        if (g) g.querySelectorAll('line').forEach(l => { l.setAttribute('x1', sx.toFixed(2)); l.setAttribute('y1', sy.toFixed(2)); l.setAttribute('x2', tx.toFixed(2)); l.setAttribute('y2', ty.toFixed(2)) })
         const p = packets.current[i]
         if (p) {
           const k = still ? 0.5 : ((t / 1000) * 0.55 + i / NODES.length) % 1
-          p.setAttribute('cx', (sx + (tx - sx) * k).toFixed(1))
-          p.setAttribute('cy', (sy + (ty - sy) * k).toFixed(1))
+          p.setAttribute('cx', (sx + (tx - sx) * k).toFixed(2))
+          p.setAttribute('cy', (sy + (ty - sy) * k).toFixed(2))
           p.setAttribute('opacity', (Math.sin(k * Math.PI) * (hover.current === i ? 1 : 0.85)).toFixed(2))
         }
       })
@@ -157,12 +180,14 @@ function Hero() {
           </g>
         </svg>
         <i className="nt-sphere" style={box(C.x - 124, C.y - 124, 248, 248)} aria-hidden="true"><b /></i>
+        {/* the engine's globe turns the other way, on its own tilted axis */}
+        <Globe className="nt-eglobe" style={box(C.x - 122, C.y - 122, 244, 244)} />
 
         {/* the eight orbiting service bubbles */}
         <div className="nt-nodes">
           {NODES.map((n, i) => (
             <button key={n.id} type="button" ref={el => { nodeEls.current[i] = el }} className={`nt-node${hot === i ? ' on' : ''}`}
-              style={{ ...box(n.x - 90, n.y - 75, 180, 155), '--c': n.c } as CSSProperties}
+              style={{ ...box(0, 0, 180, 155), transform: `translate3d(${(((n.x - 90) / 180) * 100).toFixed(3)}%, ${(((n.y - 75) / 155) * 100).toFixed(3)}%, 0)`, '--c': n.c } as CSSProperties}
               aria-label={`${n.label}: see what's included`}
               onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(-1)} onFocus={() => setHover(i)} onBlur={() => setHover(-1)}
               onClick={() => openService(n.id)}>
@@ -196,6 +221,7 @@ function Hero() {
         {[91, 205, 320, 436].map((x, i) => <i key={x} className="nt-step" style={{ ...box(x - 29, 616, 58, 58), '--i': i } as CSSProperties} aria-hidden="true" />)}
         <i className="nt-flame" style={box(340, 800, 70, 90)} aria-hidden="true" />
         <i className="nt-ped" style={box(470, 708, 1130, 150)} aria-hidden="true" />
+        <Badge img="badge-hero" style={box(957, 728, 124, 126)} />
       </div>
     </section>
   )
@@ -322,7 +348,9 @@ function Explorer() {
           <g className="orb-r r2"><ellipse cx="322" cy="410" rx="150" ry="132" pathLength={1} transform="rotate(30 322 410)" /></g>
           <g className="orb-r r3" filter="url(#ntOG)"><ellipse cx="322" cy="418" rx="168" ry="62" pathLength={1} transform="rotate(-12 322 418)" /></g>
         </svg>
-        <i className="nt-orb-sheen" style={box(222, 312, 210, 210)} aria-hidden="true" />
+        <i className="nt-orb-aura" style={box(142, 234, 360, 360)} aria-hidden="true" />
+        <Globe className="nt-sglobe" style={box(200, 292, 244, 244)} />
+        <i className="nt-orb-sheen" style={box(197, 289, 250, 250)} aria-hidden="true" />
         <span className="nt-orb-ic" key={`ic${svcIdx}`} style={box(330 - 40, 422 - 40, 80, 80)} aria-hidden="true"><Icon name={s.icon} size={64} stroke={1.5} /></span>
         <span className="nt-sparks" style={box(240, 470, 180, 120)} aria-hidden="true">{Array.from({ length: 10 }, (_, i) => <i key={i} style={{ '--k': i } as CSSProperties} />)}</span>
         {/* the orb's wires to the tiles: light flows out to each tile */}
@@ -386,6 +414,7 @@ function Explorer() {
           <button type="submit" aria-label="Send question by email" />
         </form>
         <i className="nt-ped2" style={box(180, 755, 1320, 110)} aria-hidden="true" />
+        <Badge img="badge-svc" style={box(780, 753, 114, 124)} />
       </div>
     </section>
   )
