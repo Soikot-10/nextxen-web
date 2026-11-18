@@ -473,7 +473,27 @@ function Ridge({ n, href }: { n: 1 | 2; href: string }) {
   )
 }
 
+// On desktop the services story lives in the explorer, so "#services" links land there
+function useServicesAnchor() {
+  useEffect(() => {
+    const target = () => {
+      const m = document.getElementById('services'), d = document.getElementById('nt-services')
+      return d && d.offsetParent !== null && !(m && m.offsetParent !== null) ? d : null
+    }
+    const go = (smooth: boolean) => { const d = target(); if (d) d.scrollIntoView({ behavior: smooth && !reduced() ? 'smooth' : 'auto', block: 'start' }); return !!d }
+    if (location.hash === '#services') requestAnimationFrame(() => go(false))
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null
+      if (!a || a.pathname !== '/' || a.hash !== '#services' || a.origin !== location.origin) return
+      if (go(true)) { e.preventDefault(); history.replaceState(null, '', '/#services') }
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
+}
+
 export default function HomeTop() {
+  useServicesAnchor()
   return (
     <div className="nt-flow">
       <i className="nt-sky" aria-hidden="true" />

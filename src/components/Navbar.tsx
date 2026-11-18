@@ -25,6 +25,7 @@ export function Logo() {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
+  const [past, setPast] = useState(false)
   const [mobOpen, setMobOpen] = useState(false)
   const pathname = usePathname()
   const cream = pathname === '/contact'
@@ -34,6 +35,7 @@ export default function Navbar() {
     const h = () => {
       const y = scrollY
       setScrolled(y > 24)
+      setPast(y > innerHeight * 0.75)
       setHidden(y > 400 && y > lastY + 4)
       if (y < lastY - 4 || y < 400) setHidden(false)
       lastY = y
@@ -58,7 +60,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`nav${scrolled || pathname === '/contact' || cream ? ' sc' : ''}${cream ? ' nav-cream' : ''}${pathname === '/blog' ? ' nav-jx' : ''}${pathname === '/home-preview' ? ' nav-hx' : ''}${hidden && !mobOpen ? ' up' : ''}`}>
+      <header className={`nav${scrolled || pathname === '/contact' || cream ? ' sc' : ''}${cream ? ' nav-cream' : ''}${pathname === '/blog' ? ' nav-jx' : ''}${pathname === '/' ? ` nav-hx${past ? ' hx-past' : ''}` : ''}${hidden && !mobOpen ? ' up' : ''}`}>
         <nav className="nav-in" aria-label="Main">
           <Link href="/" className="logo" aria-label="NEXTXEN home">{cream ? <GoldLogo /> : <Logo />}<span>NEXTXEN</span></Link>
 

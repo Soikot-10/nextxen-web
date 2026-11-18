@@ -13,6 +13,13 @@ import ServicesOrb from '@/components/ServicesOrb'
 import XenSection from '@/components/XenSection'
 import { industries } from '@/data/industries'
 import { blogPosts } from '@/data/blogs'
+import HomeTop from '@/components/home/HomeTop'
+import { Playfair_Display } from 'next/font/google'
+import './home.css'
+import './home-top.css'
+
+// display serif used by the homepage artwork overlays
+const display = Playfair_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-hx', display: 'swap' })
 
 // Three pillars, each pairing two of the studio's principles.
 const approach: { icon: IconName; color: string; kicker: string; title: string; desc: string; also: { title: string; desc: string } }[] = [
@@ -86,42 +93,49 @@ function Head({ eyebrow, a, b, sub, link }: { eyebrow: string; a: string; b: str
 
 export default function HomePage() {
   return (
-    <>
+    <div className={display.variable}>
+      {/* Sections 1–3: the new reference-matched stages (desktop) */}
+      <div className="hx-desk"><HomeTop /></div>
+      {/* Phones and touch tablets keep the responsive v5 sections */}
+      <div className="hx-mob">
       <HeroV5 />
 
-      {/* WHY NEXTXEN: masked statement, then three floating 3D glass pillars */}
-      <section className="sec why">
-        <div className="wrap">
-          <div className="grid12">
-            <p className="eyebrow rv rv-up col-full">Why NEXTXEN</p>
-            <ScrubText className="col-wide rv rv-mask" text="We pair senior strategy with AI automation, so every dollar you put into marketing is tracked, tested and working harder for your business." />
+        {/* WHY NEXTXEN: masked statement, then three floating 3D glass pillars */}
+        <section className="sec why">
+          <div className="wrap">
+            <div className="grid12">
+              <p className="eyebrow rv rv-up col-full">Why NEXTXEN</p>
+              <ScrubText className="col-wide rv rv-mask" text="We pair senior strategy with AI automation, so every dollar you put into marketing is tracked, tested and working harder for your business." />
+            </div>
+
+            <div className="pillars3">
+              {approach.map((w, i) => (
+                <div key={w.title} className="p3-slot rv rv-depth" style={d(i * 160)} data-parallax={[0.04, 0.09, 0.06][i]}>
+                  <article className="p3 card spot" data-tilt="6" style={{ '--c': w.color, '--fd': `${i * -1.7}s` } as CSSProperties}>
+                    <div className="p3-top">
+                      <Orb3D icon={w.icon} color={w.color} size={112} />
+                      <span className="p3-n">0{i + 1}</span>
+                    </div>
+                    <p className="p3-k">{w.kicker}</p>
+                    <h3 className="h3">{w.title}</h3>
+                    <p className="body">{w.desc}</p>
+                    <div className="p3-also">
+                      <span className="p3-dot" />
+                      <div><b>{w.also.title}</b><p>{w.also.desc}</p></div>
+                    </div>
+                  </article>
+                </div>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="pillars3">
-            {approach.map((w, i) => (
-              <div key={w.title} className="p3-slot rv rv-depth" style={d(i * 160)} data-parallax={[0.04, 0.09, 0.06][i]}>
-                <article className="p3 card spot" data-tilt="6" style={{ '--c': w.color, '--fd': `${i * -1.7}s` } as CSSProperties}>
-                  <div className="p3-top">
-                    <Orb3D icon={w.icon} color={w.color} size={112} />
-                    <span className="p3-n">0{i + 1}</span>
-                  </div>
-                  <p className="p3-k">{w.kicker}</p>
-                  <h3 className="h3">{w.title}</h3>
-                  <p className="body">{w.desc}</p>
-                  <div className="p3-also">
-                    <span className="p3-dot" />
-                    <div><b>{w.also.title}</b><p>{w.also.desc}</p></div>
-                  </div>
-                </article>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        {/* SERVICES: pinned scroll story driven together with the 3D pearls */}
+        <ServicesV5 />
 
-      {/* SERVICES: pinned scroll story driven together with the 3D pearls */}
-      <ServicesV5 />
+      </div>
 
+      <div className="hx-rest">
       {/* SERVICES ORB: an interactive keycap ball of the studio's services */}
       <section className="sec orb-band" aria-labelledby="orb-title">
         <h2 id="orb-title" className="sr-only">NEXTXEN services: spin the orb and press a key to see what&apos;s included</h2>
@@ -250,6 +264,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </>
+      </div>
+    </div>
   )
 }
