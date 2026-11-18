@@ -1,0 +1,153 @@
+/* ════════════════════════════════════════════════════════════════
+   Premium layer: realistic glass, lit icon renders, editorial layouts.
+   Loaded after globals.css so these refinements take precedence.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Glass: layered shadows, gradient edge highlight, inner light ── */
+.card, .glass {
+  border: 0;
+  border-radius: 28px;
+  background:
+    radial-gradient(120% 80% at 50% -20%, rgba(255,255,255,.075), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012) 45%, rgba(255,255,255,.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.045),
+    0 1px 1px rgba(0,0,0,.35),
+    0 8px 16px -6px rgba(0,0,0,.45),
+    0 32px 64px -24px rgba(0,0,0,.75);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+}
+.card::after, .glass::after { /* hairline edge that catches the light at the top-left */
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(155deg, rgba(255,255,255,.32), rgba(255,255,255,.06) 28%, rgba(255,255,255,.02) 60%, rgba(127,233,218,.16));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.07), 0 1px 1px rgba(0,0,0,.35), 0 16px 28px -10px rgba(0,0,0,.5), 0 48px 96px -28px rgba(0,0,0,.85), 0 0 80px -40px rgba(95,216,200,.35); }
+
+/* ── Lit glass icon (reads like a small rendered object) ───────── */
+.glass-icon, .ic, .ic3d {
+  position: relative; display: grid; place-items: center; flex-shrink: 0;
+  width: 56px; height: 56px; border-radius: 18px; border: 0; color: #fff;
+  background:
+    radial-gradient(90% 70% at 30% 12%, rgba(255,255,255,.42), rgba(255,255,255,.08) 45%, transparent 70%),
+    radial-gradient(80% 80% at 70% 110%, rgba(95,216,200,.35), transparent 60%),
+    linear-gradient(160deg, #1d2b29, #0a0f10);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.45),
+    inset 0 -1px 0 rgba(0,0,0,.6),
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    0 2px 4px rgba(0,0,0,.5),
+    0 12px 28px -8px rgba(0,0,0,.8),
+    0 0 32px -10px rgba(95,216,200,.45);
+}
+.glass-icon svg, .ic svg, .ic3d svg { filter: drop-shadow(0 0 6px rgba(212,255,58,.55)) drop-shadow(0 1px 1px rgba(0,0,0,.6)); }
+.glass-icon.sm, .ic3d.sm { width: 44px; height: 44px; border-radius: 14px; }
+.glass-icon.lg, .ic3d.lg { width: 72px; height: 72px; border-radius: 22px; }
+
+/* ── Editorial approach list ───────────────────────────────────── */
+.ed-side { grid-column: 1 / span 4; align-self: start; position: sticky; top: 140px; }
+.ed-list { grid-column: 6 / span 7; border-top: 1px solid var(--line); }
+.ed-item { display: grid; grid-template-columns: 112px 1fr auto; gap: var(--s4); align-items: start; padding: var(--s5) 0; border-bottom: 1px solid var(--line); }
+.ed-num { font-family: var(--fs); font-size: 5rem; line-height: .8; color: transparent; -webkit-text-stroke: 1px rgba(238,241,238,.28); transition: color var(--t2) var(--ease), -webkit-text-stroke-color var(--t2) var(--ease); }
+.ed-item:hover .ed-num { color: rgba(238,241,238,.92); -webkit-text-stroke-color: transparent; }
+.ed-item .h3 { margin-bottom: var(--s2); }
+.ed-item .body { max-width: 460px; }
+@media (max-width: 900px) { .ed-side { position: static; margin-bottom: var(--s6); } .ed-item { grid-template-columns: 72px 1fr; } .ed-item .glass-icon { display: none; } .ed-num { font-size: 3.4rem; } }
+
+/* ── Results: huge numerals + refined charts ───────────────────── */
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+.metric { padding: var(--s5) var(--s5) var(--s5) 0; display: flex; flex-direction: column; }
+.metric + .metric { padding-left: var(--s5); border-left: 1px solid var(--line); }
+.metric-top { display: flex; align-items: baseline; gap: var(--s2); }
+.metric-n { font-family: var(--fs); font-size: clamp(5rem, 9vw, 8.5rem); line-height: .85; letter-spacing: -.03em; background: linear-gradient(180deg, #fff 30%, #9fb3ae); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.metric-from { font-size: .85rem; color: var(--tx3); }
+.metric-l { margin-top: var(--s2); font-size: 1rem; color: var(--tx2); }
+.metric-who { margin-top: var(--s3); font-size: .8rem; color: var(--tx3); }
+.chart { margin-top: var(--s5); }
+.chart.bars { display: grid; gap: var(--s3); }
+.bar { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.bar small { order: -1; font-size: .78rem; color: var(--tx3); }
+.bar.on small { color: var(--tx2); }
+.bar::before { content: ''; grid-area: 2 / 1; height: 6px; border-radius: 6px; background: rgba(238,241,238,.07); }
+.bar span { grid-area: 2 / 1; display: block; width: var(--h); height: 6px; border-radius: 6px; background: rgba(238,241,238,.35); transform-origin: left; transform: scaleX(0); transition: transform 1.4s var(--ease) .2s; }
+.bar.on span { background: linear-gradient(90deg, rgba(212,255,58,.5), var(--lime)); box-shadow: 0 0 18px -2px rgba(212,255,58,.6); transition-delay: .4s; }
+.in .bar span { transform: none; }
+.chart.ring { width: 96px; height: 96px; transform: rotate(-90deg); }
+.chart-track { fill: none; stroke: rgba(238,241,238,.08); stroke-width: 6; }
+.chart-arc { fill: none; stroke: var(--lime); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 8px rgba(212,255,58,.5)); transition: stroke-dashoffset 1.6s var(--ease) .3s; }
+.in .chart-arc { stroke-dashoffset: calc(100 - var(--v)); }
+@media (max-width: 900px) { .metrics { grid-template-columns: 1fr; } .metric, .metric + .metric { padding: var(--s5) 0; border-left: 0; border-top: 1px solid var(--line); } .metrics > .metric:first-child { border-top: 0; } }
+
+/* ── Testimonials: editorial ───────────────────────────────────── */
+.quotes-ed { margin-top: var(--s8); align-items: start; row-gap: var(--s6); }
+.qa { grid-column: 1 / span 7; position: relative; }
+.q-mark { position: absolute; top: -.32em; left: -.06em; font-family: var(--fs); font-size: 12rem; line-height: 1; color: rgba(212,255,58,.16); pointer-events: none; }
+.qa blockquote { position: relative; font-family: var(--fs); font-size: clamp(2.2rem, 4vw, 3.6rem); line-height: 1.08; letter-spacing: -.015em; }
+.qa figcaption, .qs figcaption { display: flex; align-items: center; gap: 12px; margin-top: var(--s4); }
+.qa figcaption b, .qs figcaption b { display: block; font-size: .92rem; font-weight: 500; }
+.qa figcaption small, .qs figcaption small { font-size: .8rem; color: var(--tx3); }
+.qb { grid-column: 9 / span 4; display: grid; gap: var(--s5); }
+.qs { padding-top: var(--s4); border-top: 1px solid var(--line); }
+.qs blockquote { font-size: 1.08rem; line-height: 1.6; color: var(--tx); }
+.av { background: linear-gradient(160deg, #24322f, #0c1112); box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 4px 12px -4px rgba(0,0,0,.7); border: 0; }
+
+/* ── Process: glass step panels ────────────────────────────────── */
+.track { gap: var(--s3); }
+.track-card { padding: var(--s4) var(--s4) var(--s4); }
+.track-card .h3 { font-size: clamp(1.7rem, 2.4vw, 2.1rem); margin-bottom: 12px; }
+.track-dot { top: var(--s4); }
+.track-n { font-family: var(--fs); font-size: 1.6rem; line-height: 1; color: var(--tx2); }
+.pill-sm { padding: 6px 12px; border-radius: 999px; font-size: .74rem; color: var(--tx2); background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px var(--line2); }
+.track-meta { align-items: center; margin-bottom: var(--s3); }
+
+/* ── Services detail ───────────────────────────────────────────── */
+.svc-detail { display: flex; gap: var(--s3); align-items: flex-start; padding: var(--s3); border-radius: 22px; }
+.svc-detail p { font-size: .95rem; }
+.sheet-icon { margin-bottom: var(--s4); }
+
+/* ── Pricing: luxurious glass ──────────────────────────────────── */
+.plan { padding: var(--s5) var(--s4) var(--s4); overflow: hidden; }
+.plan-amt { font-size: clamp(3rem, 4vw, 4rem); background: linear-gradient(180deg, #fff 35%, #a9bab5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.plan.pop { background:
+    radial-gradient(90% 55% at 50% -10%, rgba(212,255,58,.16), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 1px 1px rgba(0,0,0,.35), 0 12px 24px -8px rgba(0,0,0,.5), 0 40px 90px -30px rgba(0,0,0,.85), 0 0 100px -40px rgba(212,255,58,.45); }
+.plan.pop::after { background: linear-gradient(155deg, rgba(212,255,58,.7), rgba(212,255,58,.12) 30%, rgba(255,255,255,.03) 65%, rgba(127,233,218,.25)); }
+.plan-badge { top: var(--s4); right: var(--s4); padding: 6px 12px; border-radius: 999px; color: var(--ink); background: var(--lime); letter-spacing: .08em; box-shadow: 0 0 24px -6px rgba(212,255,58,.7); }
+.ent { padding: var(--s6) var(--s5); }
+
+/* ── Journal: typographic glass covers ─────────────────────────── */
+.post { padding: 10px 10px var(--s4); min-height: 0; }
+.post > .post-meta, .post > .post-t, .post > .post-d, .post > .link-arrow { margin-left: 22px; margin-right: 22px; }
+.post-cover { position: relative; display: block; aspect-ratio: 16 / 10; margin-bottom: var(--s4); border-radius: 20px; overflow: hidden;
+  background:
+    radial-gradient(70% 90% at 80% 10%, rgba(95,216,200,.22), transparent 60%),
+    radial-gradient(60% 70% at 10% 100%, rgba(212,255,58,.10), transparent 60%),
+    linear-gradient(160deg, #121a1a, #070a0b);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.05); }
+.post-cover::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: 40px 40px; -webkit-mask: radial-gradient(80% 80% at 70% 30%, #000, transparent 75%); mask: radial-gradient(80% 80% at 70% 30%, #000, transparent 75%); }
+.post-glyph { position: absolute; right: 6%; bottom: -18%; font-family: var(--fs); font-style: italic; font-size: 13rem; line-height: 1; background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.04)); -webkit-background-clip: text; background-clip: text; color: transparent; transition: transform 1.2s var(--ease); }
+.post:hover .post-glyph { transform: translateY(-6%) scale(1.04); }
+.post-no { position: absolute; left: 20px; top: 16px; font-size: .78rem; color: var(--tx2); }
+.post-t { margin-top: var(--s3); }
+
+/* ── Industry rows: lit icon slides in on hover ────────────────── */
+.row-t { font-size: clamp(1.8rem, 2.8vw, 2.5rem); }
+
+/* ── Hero refinements ──────────────────────────────────────────── */
+.hero .h1 { text-shadow: 0 1px 0 rgba(0,0,0,.2); }
+.stat-n { font-size: clamp(2.4rem, 3.4vw, 3.2rem); background: linear-gradient(180deg, #fff 35%, #a9bab5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.btn { box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -2px 6px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -10px rgba(212,255,58,.55); }
+.btn-ghost { background: rgba(255,255,255,.035); box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px var(--line2), 0 10px 30px -14px rgba(0,0,0,.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+
+/* ── Contact + inner pages ─────────────────────────────────────── */
+.statc-n { font-size: clamp(3rem, 4.4vw, 4.2rem); background: linear-gradient(180deg, #fff 35%, #a9bab5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.ind-t { font-size: 2rem; }
+.form { padding: var(--s6) var(--s5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bar span { transform: none; }
+  .chart-arc { stroke-dashoffset: calc(100 - var(--v)); }
+}
