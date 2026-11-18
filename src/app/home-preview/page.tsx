@@ -13,8 +13,9 @@ import ServicesOrb from '@/components/ServicesOrb'
 import XenSection from '@/components/XenSection'
 import { industries } from '@/data/industries'
 import { blogPosts } from '@/data/blogs'
-import HomeStages from '@/components/home/HomeStages'
+import HomeTop from '@/components/home/HomeTop'
 import './home.css'
+import './top.css'
 
 // Three pillars, each pairing two of the studio's principles.
 const approach: { icon: IconName; color: string; kicker: string; title: string; desc: string; also: { title: string; desc: string } }[] = [
@@ -90,7 +91,7 @@ export default function HomePreview() {
   return (
     <>
       {/* Sections 1–3: the new reference-matched stages (desktop) */}
-      <div className="hx-desk"><HomeStages /></div>
+      <div className="hx-desk"><HomeTop /></div>
       {/* Phones and touch tablets keep the responsive v5 sections */}
       <div className="hx-mob">
       <HeroV5 />
