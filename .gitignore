@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local design review captures
+/_review
+
+# saved site versions (local snapshots, see scripts/site-version.mjs)
+/versions/
